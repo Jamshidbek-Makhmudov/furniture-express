@@ -1,9 +1,9 @@
 #!/bin/bash
 
 #PRODUCTION
-git checkout master
+git checkout main
 git reset  --hard
-git pull origin master
+git pull origin main
 npm i 
 pm2 start process.config.js --env production
 
