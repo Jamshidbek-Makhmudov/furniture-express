@@ -23,7 +23,7 @@ app.use(cookieParser());
 app.use(
   cors({
     credentials: true,
-    origin: '*',
+    origin: true,
   })
 );
 
@@ -56,11 +56,21 @@ app.use("/furni", router_admin);
 const server = http.createServer(app);
 
 //SOCKET.IO BACKEND SERVER //
+// const io = require("socket.io")(server, {
+//   serveClient: false,
+//   origin: "*:*",
+//   transport: ["websocket", "xhr-polling"],
+// });
 const io = require("socket.io")(server, {
   serveClient: false,
-  origin: "*:*",
+  cors: {
+    origin: "*:*",
+    methods: ["GET", "POST"],
+    credentials: true,
+  },
   transport: ["websocket", "xhr-polling"],
 });
+
 let online_users = 0;
 io.on("connection", function (socket) {
   online_users++;
