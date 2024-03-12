@@ -1,0 +1,315 @@
+<%- include('includes/header') %>
+
+<link rel="stylesheet" href="/css/menu.css" />
+<body>
+  <div id="main_container">
+    <div class="group_name">
+      <ul class="nav justify-content-center">
+        <li class="nav-item pointer">
+          <a href="/furni" class="nav-link active">Home</a>
+        </li>
+        <li class="nav-item pointer">
+          <a href="/furni/events/menu" class="nav-link active">My Events</a>
+        </li>
+        <li class="nav-item pointer">
+          <a href="/furni/logout" class="nav-link active">Logout</a>
+        </li>
+      </ul>
+    </div>
+    <div class="seller_menu_frame">
+      <div class="seller_container">
+        <div class="furniture_table">
+          <span class="new_furniture_txt">
+            <%= member.mb_nick.toUpperCase() %> Product Menu
+          </span>
+          <table class="table table-bordered table-hover">
+            <thead class="thead-light">
+              <th scope="col">T/r</th>
+              <th scope="col">Product name</th>
+              <th scope="col">Product category</th>
+              <th scope="col">Product size</th>
+              <th scope="col">Product color</th>
+              <th scope="col">Product price</th>
+              <th scope="col">Product amount</th>
+              <th scope="col">Product status</th>
+            </thead>
+            <% seller_data.map((value,key)=>{%>
+
+            <tbody class="bg-white">
+              <td><%=key+1%></td>
+              <td><%=value.product_name%></td>
+              <td><%=value.product_collection%></td>
+              <td> <%=value.product_size%>
+              </td>
+              <td><%=value.product_color%>
+              </td>
+              <td><%=value.product_price %> $</td>
+              <td><%=value.product_left_cnt %></td>
+              <td>
+                <select class="spec_select new_product_status"  id="<%= value._id %>" >
+                  <option  value="PROCESS" <%= value.product_status ==='PROCESS' ? 'selected': '' %> > PROCESS</option>
+                  <option value="PAUSED" <%= value.product_status ==='PAUSED' ? 'selected': '' %> > PAUSED</option>
+                </select>
+              </td>
+            </tbody>
+            <% }); %>
+          </table>
+          <div class="long_input align-items-end mb-5">
+            <button class="btn btn-primary hiding_btn">Add new product</button>
+          </div>
+        </div>
+        <form
+          action="/furni/products/create"
+          method="POST"
+          onsubmit="return validateForm()"
+          class="furniture_container"
+          enctype="multipart/form-data"
+        >
+          <div class="long_input align-items-center d-flex mb-5">
+            <span class="new_furniture_txt">New Product</span>
+          </div>
+          <div class="half_input_frame">
+          <div class="half_input">
+            <div>
+              <label for="">Product name</label>
+              <input
+                type="text"
+                placeholder="Product name"
+                name="product_name"
+                class="product_name"
+              />
+            </div>
+            <input
+              name="product_status"
+              value="PROCESS"
+              class="product_status"
+              hidden
+            />
+          </div>
+          <div class="half_input">
+            <label for="">Product category</label>
+            <select name="product_collection" class="product_collection">
+              <option value="bed" selected>Bed</option>
+              <option value="sofa" selected>Sofa</option>
+              <option value="armchair" selected>Armchair</option>
+              <option value="table">Table</option>
+              <option value="chair">Chair</option>
+              <option value="wooden">Wooden</option>
+              <option value="wardrob">Wardrob</option>
+            </select>
+          </div>
+        </div>
+          <div class="half_input_frame">
+            <div class="half_input">
+              <label for="">Product price</label>
+              <input
+                type="number"
+                placeholder="Product price"
+                name="product_price"
+                class="product_price"
+              />
+            </div>
+            <div class="half_input">
+              <label for="">Product amount</label>
+              <input
+                type="number"
+                placeholder="Product amount"
+                name="product_left_cnt"
+                class="product_left_cnt"
+              />
+            </div>
+          </div>
+
+          <div class="half_input_frame">
+           
+
+            <div class="half_input" id="product_size">
+              <label for="">Product size</label>
+              <select name="product_size" class="product_size">
+                <option value="normal">normal</option>
+                <option value="twin">twin</option>
+                <option value="twinXL">twinXL</option>
+                <option value="full">full</option>
+              </select>
+            </div>
+
+            <div class="half_input" id="product_color" >
+              <label for="">Product color </label>
+              <select name="product_color" class="product_color" >
+                <option selected value="white">white</option>
+                <option value="red">red</option>
+                <option value="green">green</option>
+                <option value="black">black</option>
+                <option value="gray">gray</option>
+                <option value="light gray">light gray</option>
+                <option value="mixed">mixed</option>
+                <option value="brown">brown</option>
+                <option value="blue">blue</option>
+                <option value="other">other</option>
+              </select>
+            </div>
+
+       
+          </div>
+          <div class="long_input">
+            <label for="product_description">Product description</label>
+            <textarea
+              name="product_description"
+              class="product_description"
+              id=""
+              cols="30"
+              rows="10"
+            ></textarea>
+          </div>
+          <div class="img_frame">
+            <label for="">Product photos</label>
+            <div class="media-frame">
+              <div class="upload_img_box">
+                <img
+                  src="/images/unnamed.png"
+                  alt=""
+                  class="img_1"
+                  id="image_section_1"
+                />
+                <input
+                  type="file"
+                  id="file"
+                  name="product_images"
+                  class="image_one"
+                  onchange="previewFileHander(this,1)"
+                />
+              </div>
+              <div class="upload_img_box">
+                <img
+                  src="/images/unnamed.png"
+                  alt=""
+                  class="img_2"
+                  id="image_section_2"
+                />
+                <input
+                  type="file"
+                  id="file"
+                  name="product_images"
+                  class="image_two"
+                  onchange="previewFileHander(this,2)"
+                />
+              </div>
+              <div class="upload_img_box">
+                <img
+                  src="/images/unnamed.png"
+                  alt=""
+                  class="img_3"
+                  id="image_section_3"
+                />
+                <input
+                  type="file"
+                  id="file"
+                  name="product_images"
+                  class="image_three"
+                  onchange="previewFileHander(this,3)"
+                />
+              </div>
+
+              <input
+                value="<%= member._id%>"
+                name="seller_mb_id"
+                class="seller_mb_id"
+                hidden
+              />
+            </div>
+          </div>
+          <div class="long_input align-items-end mb-5">
+            <button type="submit" id="create_product" class="btn btn-primary">
+              Submit
+            </button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+  <script>
+    $(function () {
+      // $(".product_collection").on("change", function () {
+      //   const selectedValue = $(this).val();
+      //   if (selectedValue === "wardrob" || selectedValue === "tables") {
+      //     $("#product_color").show();
+      //     $("#product_size").hide();
+      //   }  else {
+      //     $("#product_color").hide();
+      //     $("#product_size").show();
+      //   }
+      // });
+
+      $(".hiding_btn").on("click", () => {
+        $(".hiding_btn").css("display", "none");
+        $(".furniture_container").slideToggle(500).show();
+      });
+    });
+
+    // product status changer
+
+    $(".new_product_status").on("change", async function (e) {
+      const id = e.target.id;
+      const product_status = $(`#${id}.new_product_status`).val();
+      try {
+        const response = await axios.post(`/furni/products/edit/${id}`, {
+          id: id,
+          product_status: product_status,
+        });
+        const result = response.data;
+        console.log("res", result);
+
+        if (result.state == "success") {
+          alert("success");
+          location.reload();
+        } else {
+          alert(result.message);
+        }
+      } catch (err) {
+        console.log("updateChosenProduct", err);
+      }
+    });
+
+    function validateForm() {
+      const seller_mb_id = $(".seller_mb_id").val(),
+        product_name = $(".product_name").val(),
+        product_price = $(".product_price").val(),
+        product_description = $(".product_description").val(),
+        product_left_cnt = $(".product_left_cnt").val(),
+        product_collection = $(".product_collection").val(),
+        product_status = $(".new_product_status").val();
+      if (
+        seller_mb_id==="" ||
+        product_name==="" ||
+        product_collection==="" ||
+        product_description==="" ||
+        product_left_cnt==="" ||
+        product_price ===""||
+        product_status===""
+      ) {
+     
+        alert("Please fill out all required fields!");
+        return false;
+      } else return true;
+    }
+
+    function previewFileHander(input, order) {
+      const image_class_name = input.className;
+      const file = $(`.${image_class_name}`).get(0).files[0],
+        fileType = file["type"],
+        validImageTypes = ["image/jpg", "image/jpeg", "image/png"];
+      if (!validImageTypes.includes(fileType)) {
+        alert("Upload image format in the  list: (jpeg, png, jpg)");
+      } else {
+        if (file) {
+          let reader = new FileReader();
+          reader.onload = function () {
+            $(`#image_section_${order}`).attr("src", reader.result);
+          };
+          reader.readAsDataURL(file);
+        }
+      }
+    }
+  </script>
+</body>
+<%- include('includes/footer') %>

@@ -1,0 +1,76 @@
+<%- include('includes/header') %>
+
+<link rel="stylesheet" href="/css/menu.css" />
+<body>
+  <div id="main_container">
+    <div class="group_name">
+      <ul class="nav justify-content-center">
+        <li class="nav-item pointer">
+          <a href="/furni" class="nav-link active">Home</a>
+        </li>
+        <li class="nav-item pointer">
+          <a href="/furni/all-sellers" class="nav-link active">Brands</a>
+        </li>
+        <li class="nav-item pointer">
+          <a href="/furni/logout" class="nav-link active">Logout</a>
+        </li>
+      </ul>
+    </div>
+
+    <div class="seller_menu_frame">
+      <div class="seller_container">
+        <div class="furni_table">
+         
+          <table class="table table-responsive-md table-hover">
+            <caption class="new_furniture_txt"> Articles </caption>
+
+            <thead class="thead-light">
+              <th scope="col">T/r</th>
+              <th scope="col"> Name</th>
+          
+              <th scope="col"> Subject</th>
+              <th scope="col"> Category</th>
+              <th scope="col"> Status</th>
+            </thead>
+            <% article_data.map(function(value, key){ %>
+            <tr class="bg-white">
+              <th scope="row"><%= key+1%></th>
+              <td><%= value.member_data.mb_nick%></td>
+              <td><%= value.art_subject%></td>
+              <td><%= value.bo_id%></td>
+              <td style="width: 13%">
+                <select class="spec_select art_status" name=""  id="<%= value._id%>" >
+                  <option value="Active" <%= value.art_status ==="Active" ? "selected" : "" %>>Active</option>
+                  <option value="Deleted" <%= value.art_status ==="Deleted" ? "selected" : "" %>>Deleted</option>
+                </select>
+              </td>
+            </tr>
+            <% }); %>
+          </table>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    $(function () {
+
+      $(".art_status").on("change", function (e) {
+        const id = e.target.id;
+        const art_status = $(`#${id}.art_status`).val();
+        
+        axios
+        .post("/furni/all-articles/edit", { id: id, art_status: art_status })
+        .then((response) => {
+          const result = response.data;
+          if(result.state==='success') alert("successfully updated");
+          else alert(result.message)
+        })
+        .catch((err) => console.log(err));
+      });
+      
+    
+    });
+  </script>
+  </body>
+<%- include('includes/footer') %>

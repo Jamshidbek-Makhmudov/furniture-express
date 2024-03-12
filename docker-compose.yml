@@ -1,0 +1,25 @@
+version: "3.3"
+
+services:
+  node:
+    container_name: shopsy_backend
+    restart: always
+    image: node:16.10.0
+    ports:
+      - 3002:3002
+    volumes:
+      - ./:/usr/src/app
+    working_dir: /usr/src/app
+
+    networks:
+      - shopsy_network
+      # PRODUCTION
+    command:
+      bash -c "npm install && npm run start:prod"
+
+      # DEVELOPMENT
+      # command: bash -c "npm install && npm run dev"
+
+networks:
+  shopsy_network:
+    driver: bridge

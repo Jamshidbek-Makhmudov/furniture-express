@@ -1,0 +1,225 @@
+<%- include('includes/header') %>
+
+<link rel="stylesheet" href="/css/menu.css" />
+<body>
+  <div id="main_container">
+    <div class="group_name">
+      <ul class="nav justify-content-center">
+        <li class="nav-item pointer">
+          <a href="/furni" class="nav-link active">Home</a>
+        </li>
+        <li class="nav-item pointer">
+          <a href="/furni/products/menu" class="nav-link active">My Products</a>
+        </li>
+        <li class="nav-item pointer">
+          <a href="/furni/logout" class="nav-link active">Logout</a>
+        </li>
+      </ul>
+    </div>
+    <div class="seller_menu_frame">
+      <div class="seller_container">
+        <div class="furniture_table">
+          <span class="new_furniture_txt">
+            <%= member.mb_nick.toUpperCase() %> event Menu
+          </span>
+          <table class="table table-bordered table-hover">
+            <thead class="thead-light">
+              <th scope="col">T/r</th>
+              <th scope="col">Event title</th>
+              <th scope="col">Event description</th>
+              <th scope="col">Event location</th>
+              <th scope="col">Event date</th>
+              <th scope="col">Event status</th>
+            </thead>
+            <% my_events_data.map((value,key)=>{%>
+
+            <tbody class="bg-white">
+              <td><%=key+1%></td>
+              <td><%=value.event_title%></td>
+              <td><%=value.event_description%></td>
+              <td>
+                <%=value.event_location%>
+              </td>
+              <td><%=new Date(value.event_date).toLocaleDateString() %></td>
+              <td>
+                <select class="spec_select new_event_status"  id="<%= value._id %>" >
+                  <option value="Active" <%= value.event_status === 'Active' ? 'selected' : '' %> > Active</option>
+                  <option value="Deleted" <%= value.event_status === 'Deleted' ? 'selected' : '' %> > Deleted</option>
+                </select>
+              </td>
+            </tbody>
+            <% }); %>
+          </table>
+          <div class="long_input align-items-end mb-5">
+            <button class="btn btn-primary hiding_btn">Add new event</button>
+          </div>
+        </div>
+        <form
+          action="/furni/events/create"
+          method="POST"
+          onsubmit="return validateForm()"
+          class="furniture_container"
+          enctype="multipart/form-data"
+        >
+          <div class="long_input align-items-center d-flex mb-5">
+            <span class="new_furniture_txt">New Event</span>
+          </div>
+          <div class="half_input_frame">
+            <div class="half_input">
+              <label for="">Event title</label>
+              <input
+                type="text"
+                placeholder="Event title"
+                name="event_title"
+                class="event_title"
+              />
+            </div>
+            <input
+              name="event_status"
+              value="Active"
+              class="event_status"
+              hidden
+            />
+         
+            <div class="half_input">
+              <label for="">Event location</label>
+              <input
+                type="text"
+                placeholder="Event location"
+                name="event_location"
+                class="event_location"
+              />
+            </div>
+          
+         
+          </div>
+          <div class="half_input_frame">
+          <div class="half_input">
+            <label for="event description">Event description</label>
+            <textarea
+              name="event_description"
+              class="event_description"
+              id=""
+              cols="30"
+              rows="10"
+            ></textarea>
+          </div>
+          <div class="half_input">
+
+            <label for="eventDate">Event date</label>
+            <input type="date" id="eventDate" name="eventDate">
+          </div >
+        </div>
+          <div class="img_frame event">
+            <label for="">Event photo</label>
+            <div class="media-frame">
+              <div class="upload_img_box">
+                <img
+                  src="/images/unnamed.png"
+                  alt=""
+                  class="img_1"
+                  id="image_section_1"
+                />
+                <input
+                  type="file"
+                  id="file"
+                  name="event_images"
+                  class="image_one"
+                  onchange="previewFileHander(this,1)"
+                />
+               
+              </div>
+              <p class="thumbnail_desc">
+                Download your event's photo. <br />Required: .jpg, .jpeg, or
+                .png. <br />
+              </p>
+            </div>
+            <input
+              value="<%= member._id%>"
+              name="seller_mb_id"
+              class="seller_mb_id"
+              hidden
+            />
+          </div>
+          <div class="long_input align-items-end mb-5">
+            <button type="submit" id="create_event" class="btn btn-primary">
+              Submit
+            </button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+  <script>
+    $(function () {
+   
+      $(".hiding_btn").on("click", () => {
+        $(".hiding_btn").css("display", "none");
+        $(".furniture_container").slideToggle(500).show();
+      });
+    });
+
+ 
+
+    // event status changer
+    $(".new_event_status").on("change", async function (e) {
+      const id = e.target.id;
+      const event_status = $(`#${id}.new_event_status`).val();
+      try {
+        const response = await axios.post(`/furni/events/edit/${id}`, {
+          id: id,
+          event_status: event_status,
+        });
+        const result = response.data;
+
+        if (result.state == "success") {
+          alert("success");
+          location.reload();
+        } else {
+          alert(result.message);
+        }
+      } catch (err) {
+        console.log("updateChosenEvent", err);
+      }
+    });
+
+    function validateForm() {
+      const seller_mb_id = $(".seller_mb_id").val(),
+        event_title = $(".event_title").val(),
+        event_location = $(".event_location").val(),
+        event_description = $(".event_description").val(),
+        event_status = $(".new_event_status").val();
+        event_date = $("#eventDate").val();
+      if (
+        seller_mb_id==="" ||
+        event_title==="" ||
+        event_description==="" ||
+        event_location ===""||
+        event_status===""||  event_date===""
+      ) {
+     
+        alert("Please fill out all required fields!");
+        return false;
+      } else return true;
+    }
+
+    function previewFileHander(input, order) {
+      const image_class_name = input.className;
+      const file = $(`.${image_class_name}`).get(0).files[0],
+        fileType = file["type"],
+        validImageTypes = ["image/jpg", "image/jpeg", "image/png"];
+      if (!validImageTypes.includes(fileType)) {
+        alert("Upload image format in the  list: (jpeg, png, jpg)");
+      } else {
+        if (file) {
+          let reader = new FileReader();
+          reader.onload = function () {
+            $(`#image_section_${order}`).attr("src", reader.result);
+          };
+          reader.readAsDataURL(file);
+        }
+      }
+    }
+</script>
+</body>
+<%- include('includes/footer') %>
