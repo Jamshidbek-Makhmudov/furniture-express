@@ -4,7 +4,8 @@ module.exports = {
       name: "Shopsy",
       cwd: "./",
       script: "./server.js",
-      watch: true,
+      // watch: true,
+      watch: false,
       env_production: {
         NODE_ENV: "production",
       },
