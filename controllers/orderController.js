@@ -15,7 +15,7 @@ const orderController = {
       res.json({ state: "success", data: result });
     } catch (err) {
       console.log(`ERROR, cont/createOrder, ${err.message}`);
-      res.json({ state: "fail", message: err.message });
+      res.json({ state: "fails", message: err.message });
     }
   },
 

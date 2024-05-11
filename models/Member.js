@@ -1,4 +1,4 @@
-const assert = require("assert");
+const assert = require("assert");//
 const memberModel = require("../schema/member.model");
 const bcrypt = require("bcryptjs");
 const View = require("./View");

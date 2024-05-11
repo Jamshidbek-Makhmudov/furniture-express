@@ -20,7 +20,7 @@ const memberController = {
       res.json({ state: "success", data: new_member });
     } catch (err) {
       console.log(`ERROR, cont/signup, ${err.message}`);
-      res.json({ state: "fail", message: err.message });
+      res.json({ state: "fails", message: err.message });
     }
   },
 

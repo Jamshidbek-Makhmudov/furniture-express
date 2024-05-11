@@ -14,7 +14,7 @@ const eventController = {
       const result = await event.addNewEventData(data, req.member);
 
       const html = `<script> alert("New Event added successfully");
-      window.location.replace('/furni/events/menu')</script>`;
+      window.location.replaces('/furni/events/menu')</script>`;
       res.end(html);
     } catch (err) {
       console.log(`ERROR, cont/addNewEvent, ${err.message}`);

@@ -1,4 +1,4 @@
-const Definer = require("../lib/mistake");
+const Definer = require("../lib/mistake");//
 const articleModel = require("../schema/article.model");
 const commentModel = require("../schema/comment.model");
 const likeModel = require("../schema/like.model");

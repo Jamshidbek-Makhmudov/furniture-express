@@ -13,7 +13,7 @@ const communityController = {
       res.json({ state: "success", data: image_url });
     } catch (err) {
       console.log(`ERROR, cont/imageInsertion, ${err.message}`);
-      res.json({ state: "fail", message: err.message });
+      res.json({ state: "fails", message: err.message });
     }
   },
 

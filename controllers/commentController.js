@@ -51,7 +51,7 @@ const commentController = {
 
       res.json({ state: "success", data: result });
     } catch (err) {
-      console.log(`ERROR, cont/getAllComment, ${err.message}`);
+      console.log(`ERROR, contr/getAllComment, ${err.message}`);
       res.json({ state: "fail", message: err.message });
     }
   },
