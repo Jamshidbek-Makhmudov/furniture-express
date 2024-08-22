@@ -50,6 +50,9 @@ app.set("views", "views");
 app.set("view engine", "ejs");
 
 // 4. Routing setup
+app.get('/admin/check-health', (req, res) => {
+  res.sendStatus(200);
+});
 app.use("/", router);
 app.use("/furni", router_admin);
 

@@ -1,41 +1,287 @@
 <%- include('includes/header') %>
-<link rel="stylesheet" href="/css/home.css" />
-<head>
-  <meta charset="UTF-8" />
-  <meta http-equiv="X-UA-Compatible" content="IE=edge" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Glassmorphism button</title>
-</head>
+  <link rel="stylesheet" type="text/css" href="/css/main_moon.css" />
 
-<body>
-  <div class="container">
-    <% if(!member){%>
-    <div class="btn">
-      <a class="nav-link" aria-current="page" href="/furni/sign-up">Signup</a>
+  <body>
+    <div class="group_name">
+      <ul class="nav justify-content-center">
+        <li class="nav-item" style="cursor: pointer">
+          <a class="nav-link active" href="/furni">Home</a>
+        </li>
+
+        <% if(!member) { %>
+          <li class="nav-item" style="cursor: pointer">
+            <a class="nav-link" href="/furni/sign-up">Signup</a>
+          </li>
+          <li class="nav-item" style="cursor: pointer">
+            <a class="nav-link" href="/furni/login">Login</a>
+          </li>
+
+          <% } else if(member.mb_type==="ADMIN" ) { %>
+            <li class="nav-item" style="cursor: pointer">
+              <a class="nav-link" href="/furni/all-sellers">AllBrand</a>
+            </li>
+            <li class="nav-item" style="cursor: pointer" onclick="return confirm('Do you want to logout?')">
+              <a class="nav-link" href="/furni/logout">Logout</a>
+            </li>
+            <% } else { %>
+              <li class="nav-item" style="cursor: pointer">
+                <a class="nav-link" href="/furni/products/menu">MyBrand</a>
+              </li>
+              <li class="nav-item" style="cursor: pointer" onclick="return confirm('Do you want to logout?')">
+                <a class="nav-link" href="/furni/logout">Logout</a>
+              </li>
+              <% } %>
+      </ul>
     </div>
-    <div class="btn">
-      <a class="nav-link" aria-current="page" href="/furni/login">Login</a>
-      <%} else if (member.mb_type ==="ADMIN") {%>
-      <div class="btn">
-        <a class="nav-link" aria-current="page" href="/furni/all-sellers"
-          >All Brands</a
-        >
+
+    <div class="wrapper">
+      <div class="left">
+        <div id="redmoon" class="scene red">
+          <div class="overlay"></div>
+          <div class="sky">
+            <div class="craters"></div>
+            <svg height="200" width="200">
+              <circle cx="100" cy="100" r="100" />
+            </svg>
+          </div>
+          <div class="sea">
+            <div class="layerone"></div>
+            <div class="layertwo"></div>
+          </div>
+        </div>
       </div>
-      <div class="btn" onclick="return confirm('Do you want logout?')">
-        <a class="nav-link" href="/furni/logout">Logout</a>
+      <div class="right">
+        <h1 class="title">Crimson Moon</h1>
       </div>
-      <%} else {%>
-      <div class="btn">
-        <a class="nav-link" aria-current="page" href="/furni/products/menu"
-          >Mypage</a
-        >
-      </div>
-      <div class="btn" onclick="return confirm('Do you want logout?')">
-        <a class="nav-link" href="/furni/logout">Logout</a>
-      </div>
-      <%}%>
     </div>
-  </div>
-</body>
-<body></body>
-<%- include('includes/footer') %>
+
+
+    <script>
+      $(document).ready(function () {
+        // Get height of sea
+        var seaHeight = Math.floor($('.sea').height());
+
+        //Append water lines to the sea (First layer)
+        for (var i = 0; i <= seaHeight; i++) {
+          (i % 2 == 0) ? lineClass = 'even' : lineClass = 'odd';
+          $('.layerone').append(
+            '<svg height="2" width="50" class="water ' + lineClass + '">' +
+            '<polygon points="" class="waterline one"/>' +
+            '</svg>'
+          );
+        }
+        //Append water lines to the sea (Second layer)
+        for (var i = 0; i <= seaHeight / 10; i++) {
+          (i % 2 == 0) ? lineClass = 'even' : lineClass = 'odd';
+          $('.layertwo').append(
+            '<svg height="2" width="30" class="water ' + lineClass + '">' +
+            '<polygon points="" class="waterline two"/>' +
+            '</svg>'
+          );
+        }
+
+        // Change shape of water lines (First layer)
+        anime({
+          targets: '.waterline.one',
+          points: [
+            {
+              value: [
+                '0,1 50,0 50,2 -50,1',
+                '0,0 50,1 50,1 -50,2']
+            },
+            { value: '0,1 50,0 50,2 -50,1' },
+          ],
+          easing: 'easeOutQuad',
+          duration: function () {
+            return anime.random(1000, 2000);
+          },
+          delay: function () {
+            return anime.random(100, 500);
+          },
+          direction: 'alternate',
+          loop: true
+        });
+
+        // Change shape of water lines (Second layer)
+        anime({
+          targets: '.waterline.two',
+          points: [
+            {
+              value: [
+                '0,1 30,0 30,2 -30,1',
+                '0,0 30,1 30,1 -30,2']
+            },
+            { value: '0,1 30,0 30,2 -30,1' },
+          ],
+          easing: 'easeOutQuad',
+          duration: 2000,
+          delay: function () {
+            return anime.random(100, 500);
+          },
+          direction: 'alternate',
+          loop: true
+        });
+
+        function waterlines() {
+          // Change the color of water lines
+          $('.scene').each(function () {
+            ($(this).hasClass('red')) ? waterColor = '#EE5562' : waterColor = '#96ccde';
+            var elID = $(this).attr('id');
+
+            anime({
+              targets: '#' + elID + ' .sea svg',
+              fill: ['transparent', waterColor],
+              easing: 'easeOutQuad',
+              duration: 25,
+              loop: true,
+            });
+          });
+
+          // Spread water lines (Which has class 'even') (First layer)
+          anime({
+            targets: '.layerone svg.water.even',
+            translateX: function () {
+              return anime.random(-50, 50);
+            },
+            scaleX: function () {
+              return anime.random(0, 2);
+            },
+            easing: 'easeOutQuad',
+            duration: function () {
+              return anime.random(300, 1000);
+            },
+          });
+
+          // Spread water lines (Which has class 'odd') (First layer)
+          anime({
+            targets: '.layerone svg.water.odd',
+            translateX: function () {
+              return anime.random(100, -100);
+            },
+            scaleX: function () {
+              return anime.random(0, 2);
+            },
+            easing: 'easeOutQuad',
+            duration: function () {
+              return anime.random(300, 1000);
+            },
+          });
+
+          // Spread water lines (Which has class 'even') (Second layer)
+          anime({
+            targets: '.layertwo svg.water.even',
+            translateX: function () {
+              return anime.random(-25, 50);
+            },
+            scale: function () {
+              return anime.random(0, 1);
+            },
+            easing: 'easeInSine',
+            duration: function () {
+              return anime.random(300, 1000);
+            },
+            delay: function () {
+              return anime.random(100, 500);
+            },
+          });
+
+          // Spread water lines (Which has class 'odd') (Second layer)
+          anime({
+            targets: '.layertwo svg.water.odd',
+            translateX: function () {
+              return anime.random(75, -50);
+            },
+            scale: function () {
+              return anime.random(0, 1);
+            },
+            easing: 'easeInSine',
+            duration: function () {
+              return anime.random(300, 1000);
+            },
+            delay: function () {
+              return anime.random(100, 700);
+            },
+          });
+        }
+
+        waterlines();
+
+        // Change moon
+        $('body').click(function () {
+
+          setTimeout(function () {
+            $('.scene').toggleClass('red blue');
+            waterlines();
+          }, 400);
+
+          var tl_1 = anime.timeline();
+
+          tl_1
+            .add({
+              targets: '.sky svg',
+              translateY: [{ value: 250, duration: 500, easing: 'easeOutExpo' }],
+              zIndex: [{ value: 0, duration: 1 }],
+            })
+            .add({
+              targets: '.sky svg',
+              translateY: [{ value: 0, duration: 800, easing: 'easeOutBack' }],
+              zIndex: [{ value: 1, duration: 1, delay: 200 }],
+            });
+
+          var tl_2 = anime.timeline();
+
+          tl_2
+            .add({
+              targets: '.craters',
+              translateY: [{ value: 250, duration: 500, easing: 'easeOutExpo' }],
+              zIndex: [{ value: 0, duration: 1, delay: 60 }],
+            })
+            .add({
+              targets: '.craters',
+              translateY: [{ value: 0, duration: 800, easing: 'easeOutBack' }],
+              zIndex: [{ value: 2, duration: 1, delay: 150 }],
+            });
+
+          anime({
+            targets: '.layerone svg.water',
+            translateX: 0,
+            scaleX: 0,
+            easing: 'cubicBezier(0,1.11,.79,1)',
+            duration: 500
+          });
+
+          anime({
+            targets: '.layertwo svg.water',
+            translateX: 0,
+            scale: 0,
+            easing: 'cubicBezier(0,1.11,.79,1)',
+            duration: 500
+          });
+
+          var tl_3 = anime.timeline({
+            easing: 'easeOutExpo'
+          });
+
+          tl_3
+            .add({
+              targets: '.title',
+              scaleY: 0,
+              duration: 400
+            })
+            .add({
+              targets: '.title',
+              scaleY: 1,
+              duration: 700
+            });
+
+          setTimeout(function () {
+            ($('.title').text() == "Crimson Moon") ? title = 'Blue Moon' : title = 'Crimson Moon';
+            $('.title').text(title);
+            waterlines();
+          }, 400);
+        });
+      });
+    </script>
+  </body>
+
+  <%- include('includes/footer') %>
